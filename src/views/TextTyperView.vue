@@ -2,6 +2,7 @@
   import { ref } from 'vue'
 
   // Dynamic values
+  const contentString = ref(""); // Reactive state for input
   const bluetoothDevice = ref(undefined)
   const server = ref(undefined)
   const service = ref(undefined)
@@ -35,6 +36,34 @@
     if (bluetoothDevice.value) bluetoothDevice.value.gatt.disconnect();
   }
 
+  const SendContent = async () => {
+    console.log(contentString.value);
+    if (!characteristic.value) return;
+
+    const valueToSend = contentString.value;
+    console.log('Sending: ' + valueToSend);
+    characteristic.writeValue(textEncoder.encode(valueToSend));
+    console.log('Send succesfully');
+  }
+
+  const SendBackspace = async () => {
+    if (!characteristic.value) return;
+
+    console.log('Sending: Backspace')
+    characteristic.value.writeValue(Uint8Array.of(0x08));
+    console.log('Send succesfully')
+  }
+
+  const SendClipboard = async () => {
+    if (!characteristic.value) return;
+
+    const valueToSend = await navigator.clipboard.readText()
+    if (valueToSend) {
+      console.log('Sending clipboard content: ' + valueToSend)
+      characteristic.value.writeValue(textEncoder.encode(valueToSend))
+      console.log('Send succesfully')
+    }
+  }
 </script>
 
 <template>
@@ -43,28 +72,30 @@
       <h1>
         Bluetooth Text Typer
       </h1>
-      <button @click="ConnectDevice" >Connect</button>
-
-      <button>Disconnect</button>
+      <button v-if="!characteristic" @click="ConnectDevice" >Connect</button>
+      <button v-if="characteristic" @click="DisconnectDevice">Disconnect</button>
     </div>
     
     <div class="TextTyperWrapper">
-      <textarea 
+      <textarea v-model="contentString"
         id="valueField" 
         class="TextTyperArea"
         placeholder="Paste or type here" 
         style="width: 500px;height: 400px;"></textarea>
 
-      <div class="TextTyperActions">
-        <button>Send</button>
-        <button>Backspace</button>
-        <button>Paste</button>
+      <div class="TextTyperActions" v-if="characteristic">
+        <button @click="SendContent">Send</button>
+        <button @click="SendBackspace">Backspace</button>
+        <button @click="SendClipboard">Paste</button>
       </div>
 
     </div>
 
   </main>
 </template>
+
+
+
 
 <style scoped>
 
