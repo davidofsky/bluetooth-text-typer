@@ -51,7 +51,7 @@
     <div class="TextTyperWrapper">
       <textarea 
         id="valueField" 
-        class="TextTyperArea green"
+        class="TextTyperArea"
         placeholder="Paste or type here" 
         style="width: 500px;height: 400px;"></textarea>
 
@@ -73,9 +73,17 @@
   }
 
   .TextTyperArea {
-    background: transparent;
+    padding: .5em;
+    background: #1f1f1f;
     border-radius: .3em;
+    color: var(--color-text);
+
   }
+  .TextTyperArea:focus {
+    outline: none !important;
+    border:1px solid var(--color-theme-bright);
+  }
+
 
   .TextTyperActions {
     width: 100%;
@@ -85,20 +93,24 @@
 
   button {
     color: var(--color-text);
-    background: black;
+    background: #1f1f1f;
     border: 1px solid var(--color-text);
     border-radius: .3em;
     padding: .5em;
     margin: .5em;
+
+    transition: background-color .2s, color .2s, transform .2s linear; 
+
   }
 
   button:hover {
     text-decoration: none;
-    color: hsla(160, 100%, 37%, 1);
-    background: hsla(160, 100%, 10%, 1);
-    border: 1px solid hsla(160, 100%, 37%, 1);
+    color: var(--color-theme-bright);
+    background: var(--color-theme-dark);
+    border: 1px solid var(--color-theme-bright);
     transition: 0.4s;
     cursor: pointer;
+    transform: scale(1.1);
   }
 
 
