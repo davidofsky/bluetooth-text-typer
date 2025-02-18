@@ -33,7 +33,10 @@
   }
 
   const DisconnectDevice = async () => {
-    if (bluetoothDevice.value) bluetoothDevice.value.gatt.disconnect();
+    if (bluetoothDevice.value) {
+      bluetoothDevice.value.gatt.disconnect();
+      bluetoothDevice.value = null;
+    }
   }
 
   const SendContent = async () => {
@@ -42,7 +45,7 @@
 
     const valueToSend = contentString.value;
     console.log('Sending: ' + valueToSend);
-    characteristic.writeValue(textEncoder.encode(valueToSend));
+    characteristic.value.writeValue(textEncoder.encode(valueToSend));
     console.log('Send succesfully');
   }
 
@@ -93,56 +96,3 @@
 
   </main>
 </template>
-
-
-
-
-<style scoped>
-
-  .TextTyperWrapper {
-    width: fit-content;
-  }
-
-  .TextTyperArea {
-    padding: .5em;
-    background: #1f1f1f;
-    border-radius: .3em;
-    color: var(--color-text);
-
-  }
-  .TextTyperArea:focus {
-    outline: none !important;
-    border:1px solid var(--color-theme-bright);
-  }
-
-
-  .TextTyperActions {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  button {
-    color: var(--color-text);
-    background: #1f1f1f;
-    border: 1px solid var(--color-text);
-    border-radius: .3em;
-    padding: .5em;
-    margin: .5em;
-
-    transition: background-color .2s, color .2s, transform .2s linear; 
-
-  }
-
-  button:hover {
-    text-decoration: none;
-    color: var(--color-theme-bright);
-    background: var(--color-theme-dark);
-    border: 1px solid var(--color-theme-bright);
-    transition: 0.4s;
-    cursor: pointer;
-    transform: scale(1.1);
-  }
-
-
-</style>
